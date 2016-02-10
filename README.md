@@ -1,4 +1,4 @@
-# craigslist-apartment-stats:<br>Calculate statistics for Craigslist apartment listings
+# craigslist-apartment-stats:<br>Calculate statistics for Craigslist apartment listings.
 
 What this does:
 
@@ -9,38 +9,51 @@ What this does:
 
 Syntax:
 
-    craigslist-apartment-stats <url> [ ( -b | --bedrooms) <number> ]
+   craigslist-apartment-stats [options] <url> ...
 
-Example:
+Options:
 
-    craigslist-apartment-stats http://sfbay.craigslist.org/search/sfc/apa --bedrooms 1
+   --bedrooms <number>: the number of bedrooms for the filter; default is 1.
+   -h, --help, -?: show help
+   -V, --version: show version
 
-Example URIs:
+Example to search San Francisco:
 
-  * New York: Brooklyn: Apartments (by owner, broker fee, broker no fee)
-    http://newyork.craigslist.org/search/brk/aap?bedrooms=1
+    craigslist-apartment-stats \
+    http://sfbay.craigslist.org/search/sfc/apa?bedrooms=1&min_price=1000&max_price=5000
 
-  * San Francisco: Noe Valley neighborhood:
-    http://sfbay.craigslist.org/search/sfc/apa?nh=21&housing_type=1&bedrooms=1
+## Filter hints
 
-  * San Francisco Bay Area: Peninsula: Palo Alto:
-    http://sfbay.craigslist.org/search/pen/apa?nh=83&bedrooms=1
+The Craigslist apartment listing web pages in some cities will let you
+filter by neighborhood, or price, or whether pets are allowed, and so
+on. These filters can be useful for scoping your search.
 
-The default search uses these settings:
+## Bedroom hints
 
-  * San Francisco, because it's where most users are searching.
-  * Downtown neighborhood, because this is a good baseline for the city.
-  * One bedroom, because this is a good baseline for multipliers.
+If you use Craigslist and its web page to filter for number of
+bedrooms, then Craigslist typically shows any listings that have that
+number of bedrooms or more. This is probably *not* what you want for
+calaculating meaningful statistics.
 
+This script provides the bedroom filter, so you can limit the bedrooms
+to exactly one number.
 
-This script requires:
+## Price hints
 
- * `curl` fetches the web page
- * `html2text`renders the web page HTML
- * `num` calculates the stats; get it at http://www.numcommand.com
+Listing prices may vary by large ranges, depending if the price is per
+week, per month, or per year. For example, if you want statistics on
+apartments that are approximately $1000 per month, then you can make a
+good guess that listing prices near $250 are actuallly per week not
+per month, and listing prices near $12,000 are per year not per month.
 
-Heuristics:
+You can get improve your results by filtering for a minimum price and
+maximum price. To do this, use Craigslist's website search to create a
+link that includes minimum price and a maximum price.
 
-  * Skip prices less than $200 because these are typically weekly prices.
-  * Skip prices greater than $10000 because these are typically home purchases.
-  * Skip any listings after "Few LOCAL results found".
+## Requirements
+
+This script requires these commands:
+
+  * `curl` fetches the web page
+  * `html2text`renders the web page HTML
+  * `num` calculates the stats; get it at http://www.numcommand.com

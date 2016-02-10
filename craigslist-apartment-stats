@@ -1,82 +1,140 @@
 #!/bin/sh
-#
-# craigslist-apartment-stats:
-# Calculate statistics for Craigslist apartment listings.
-#
-# What this does:
-#
-#   1. Fetch a given URL
-#   2. Render the HTML
-#   3. Filter for the number of bedrooms
-#   4. Calculate price statistics
-#
-# Syntax:
-#
-#    craigslist-apartment-stats <url> [ ( -b | --bedrooms) <number> ]
-#
-# Example:
-#
-#     craigslist-apartment-stats http://sfbay.craigslist.org/search/sfc/apa
-#
-# Example URIs:
-#
-#   * New York: Brooklyn: Apartments (by owner, broker fee, broker no fee)
-#     http://newyork.craigslist.org/search/brk/aap?bedrooms=1
-#
-#   * San Francisco: Noe Valley neighborhood:
-#     http://sfbay.craigslist.org/search/sfc/apa?nh=21&housing_type=1&bedrooms=1
-#
-#   * San Francisco Bay Area: Peninsula: Palo Alto:
-#     http://sfbay.craigslist.org/search/pen/apa?nh=83&bedrooms=1
-#
-# The default search uses these settings:
-#
-#   * San Francisco, because it's where most users are searching.
-#   * Downtown neighborhood, because this is a good baseline for the city.
-#   * One bedroom, because this is a good baseline for multipliers.
-#
-# This script requires:
-#
-#  * `curl` fetches the web page
-#  * `html2text`renders the web page HTML
-#  * `num` calculates the stats; get it at http://www.numcommand.com
-#
-# Heuristics:
-#
-#   * Skip prices less than $200 because these are typically weekly prices.
-#   * Skip prices greater than $10000 because these are typically home purchases.
-#   * Skip any listings after "Few LOCAL results found".
-#
-# Command: craigslist-apartment-stats
-# Version: 3.0.0
-# Created: 2014-12-24
-# Updated: 2016-02-10
-# License: GPL
-# Contact: Joel Parker Henderson (joel@joelparkerhenderson.com)
-##
 set -euf
-uri=${1:-"http://sfbay.craigslist.org/search/apa"}
-shift
 
+program_command="craigslist-apartment-stats"
+program_version="3.0.0"
+program_created="2014-12-24"
+program_updated="2016-02-10"
+program_license="GPL"
+program_contact="Joel Parker Henderson (joel@joelparkerhenderson.com)"
+program_variant="$program_command version $program_version updated $program_updated"
+
+help(){
+cat<<END
+craigslist-apartment-stats:
+Calculate statistics for Craigslist apartment listings.
+
+What this does:
+
+  1. Fetch a given URL
+  2. Render the HTML
+  3. Filter for the number of bedrooms
+  4. Calculate price statistics
+
+Syntax:
+
+   craigslist-apartment-stats [options] <url> ...
+
+Options:
+
+   --bedrooms <number>: the number of bedrooms for the filter; default is 1.
+   -h, --help, -?: show help
+   -V, --version: show version
+
+Example to search San Francisco:
+
+    craigslist-apartment-stats \
+    http://sfbay.craigslist.org/search/sfc/apa?bedrooms=1&min_price=1000&max_price=5000
+
+## Filter hints
+
+The Craigslist apartment listing web pages in some cities will let you
+filter by neighborhood, or price, or whether pets are allowed, and so
+on. These filters can be useful for scoping your search.
+
+## Bedroom hints
+
+If you use Craigslist and its web page to filter for number of
+bedrooms, then Craigslist typically shows any listings that have that
+number of bedrooms or more. This is probably *not* what you want for
+calaculating meaningful statistics.
+
+This script provides the bedroom filter, so you can limit the bedrooms
+to exactly one number.
+
+## Price hints
+
+Listing prices may vary by large ranges, depending if the price is per
+week, per month, or per year. For example, if you want statistics on
+apartments that are approximately $1000 per month, then you can make a
+good guess that listing prices near $250 are actuallly per week not
+per month, and listing prices near $12,000 are per year not per month.
+
+You can get improve your results by filtering for a minimum price and
+maximum price. To do this, use Craigslist's website search to create a
+link that includes minimum price and a maximum price.
+
+## Requirements
+
+This script requires these commands:
+
+  * `curl` fetches the web page
+  * `html2text`renders the web page HTML
+  * `num` calculates the stats; get it at http://www.numcommand.com
+
+Command:$program_command
+Version:$program_version
+Created:$program_created
+Updated:$program_updated
+License:$program_license
+Contact:$program_contact
+END
+}
+
+## Staples
+out () { printf %s\\n "$*" ; }
+err () { >&2 printf %s\\n "$*" ; }
+die () { >&2 printf %s\\n "$*" ; exit 1 ; }
+die_opt_unk() { die "Option $1 is unknown" ; }
+die_opt_arg() { die "Option $1 needs an argument" ; }
+
+## Defaults - these are suiable for a demo
 bedrooms="1"
+min="1"
+max="10000"
 
-while [ "$1" != "" ]; do
+while [ $# -gt 0 ]; do
   case $1 in
-    -b | --bedrooms )
+    --)
       shift
-      bedroom=$1
+      break
       ;;
-     *)
-      printf "Unknown option %s\n" "$1"
-      exit 1
+    -h|--help|-\?)
+      help
       ;;
+    -V|--version|-\?)
+      out $program_variant
+      ;;
+    --bedrooms)
+      [ $# -le 1 ] && die_opt_arg $1
+      bedrooms=$2
+      shift
+      ;;
+    --min)
+      [ $# -le 1 ] && die_opt_arg $1
+      min=$2
+      shift
+      ;;
+    --max)
+      [ $# -le 1 ] && die_opt_arg $1
+      max=$2
+      shift
+      ;;
+    -?*)
+      die_opt_unk $1
+      ;;
+    *)
+      break
   esac
+  shift
 done
 
-echo "min max range mean standarddeviation skewness kurtosis"
-curl "$uri" |
-html2text -nobs -width 10000 |
-sed '/Few LOCAL results found/,$d' |
-sed -n "s/^.* &#x0024;\([^ ]*\) \/ ${bedrooms}br - .*$/\1/p" |
-awk '$1 > 200 && $1 < 10000 {print $1}' |
-num min max range mean standarddeviation skewness kurtosis
+echo "min max range mean stddev skewness kurtosis"
+
+for uri in "$@"; do
+  curl -s "$uri" |
+  html2text -nobs -width 10000 |
+  sed '/Few LOCAL results found/,$d' |
+  sed -n "s/^.*[^0-9]\([0-9]\+\) \/ ${bedrooms}br - .*$/\1/p" |
+  num min max range mean stddev skewness kurtosis
+done
