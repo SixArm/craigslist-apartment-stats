@@ -9,13 +9,13 @@ What this does:
 
 Syntax:
 
-   craigslist-apartment-stats [options] <url> ...
+    craigslist-apartment-stats [options] <url> ...
 
 Options:
 
-   --bedrooms <number>: the number of bedrooms for the filter; default is 1.
-   -h, --help, -?: show help
-   -V, --version: show version
+  * --bedrooms <number>: the number of bedrooms for the filter; default is 1.
+  * -h, --help, -?: show help
+  * -V, --version: show version
 
 Example to search San Francisco:
 

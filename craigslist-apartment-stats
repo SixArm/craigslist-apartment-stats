@@ -23,17 +23,17 @@ What this does:
 
 Syntax:
 
-   craigslist-apartment-stats [options] <url> ...
+    craigslist-apartment-stats [options] <url> ...
 
 Options:
 
-   --bedrooms <number>: the number of bedrooms for the filter; default is 1.
-   -h, --help, -?: show help
-   -V, --version: show version
+  * --bedrooms <number>: the number of bedrooms for the filter; default is 1.
+  * -h, --help, -?: show help
+  * -V, --version: show version
 
 Example to search San Francisco:
 
-    craigslist-apartment-stats \
+    craigslist-apartment-stats \\
     http://sfbay.craigslist.org/search/sfc/apa?bedrooms=1&min_price=1000&max_price=5000
 
 ## Filter hints
@@ -56,9 +56,9 @@ to exactly one number.
 
 Listing prices may vary by large ranges, depending if the price is per
 week, per month, or per year. For example, if you want statistics on
-apartments that are approximately $1000 per month, then you can make a
-good guess that listing prices near $250 are actuallly per week not
-per month, and listing prices near $12,000 are per year not per month.
+apartments that are approximately \$1000 per month, then you can make a
+good guess that listing prices near \$250 are actuallly per week not
+per month, and listing prices near \$12,000 are per year not per month.
 
 You can get improve your results by filtering for a minimum price and
 maximum price. To do this, use Craigslist's website search to create a
@@ -68,9 +68,9 @@ link that includes minimum price and a maximum price.
 
 This script requires these commands:
 
-  * `curl` fetches the web page
-  * `html2text`renders the web page HTML
-  * `num` calculates the stats; get it at http://www.numcommand.com
+  * \`curl\` fetches the web page
+  * \`html2text\`renders the web page HTML
+  * \`num\` calculates the stats; get it at http://www.numcommand.com
 
 Command:$program_command
 Version:$program_version
@@ -128,6 +128,8 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+[ $# -eq 0 ] && help && exit 0
 
 echo "min max range mean stddev skewness kurtosis"
 
