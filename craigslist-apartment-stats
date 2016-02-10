@@ -25,16 +25,16 @@ Syntax:
 
     craigslist-apartment-stats [options] <url> ...
 
+Example:
+
+    craigslist-apartment-stats \\
+    http://sfbay.craigslist.org/search/sfc/apa?bedrooms=3&min_price=1000&max_price=9000
+
 Options:
 
   * --bedrooms <number>: the number of bedrooms for the filter; default is 1.
   * -h, --help, -?: show help
   * -V, --version: show version
-
-Example to search San Francisco:
-
-    craigslist-apartment-stats \\
-    http://sfbay.craigslist.org/search/sfc/apa?bedrooms=1&min_price=1000&max_price=5000
 
 ## Filter hints
 
