@@ -33,7 +33,7 @@ on. These filters can be useful for scoping your search.
 If you use Craigslist and its web page to filter for number of
 bedrooms, then Craigslist typically shows any listings that have that
 number of bedrooms or more. This is probably *not* what you want for
-calaculating meaningful statistics.
+calculating meaningful statistics.
 
 This script provides the bedroom filter, so you can limit the bedrooms
 to exactly one number.
