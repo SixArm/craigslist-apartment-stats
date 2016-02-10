@@ -1,15 +1,19 @@
-# craigslist-apartment-stats:<br>Calculate simple statistics for Craigslist apartment listings.
+# craigslist-apartment-stats:<br>Calculate statistics for Craigslist apartment listings
 
 What this does:
 
   1. Fetch a given URL
   2. Render the HTML
   3. Filter for the number of bedrooms
-  4. Calculate price stats
+  4. Calculate price statistics
+
+Syntax:
+
+    craigslist-apartment-stats <url> [ ( -b | --bedrooms) <number> ]
 
 Example:
 
-    craigslist-apartment-stats http://sfbay.craigslist.org/search/sfc/apa
+    craigslist-apartment-stats http://sfbay.craigslist.org/search/sfc/apa --bedrooms 1
 
 Example URIs:
 
@@ -40,37 +44,3 @@ Heuristics:
   * Skip prices less than $200 because these are typically weekly prices.
   * Skip prices greater than $10000 because these are typically home purchases.
   * Skip any listings after "Few LOCAL results found".
-
-Command: craigslist-apartment-stats
-Version: 3.0.0
-Created: 2014-12-24
-Updated: 2016-02-10
-License: GPL
-Contact: Joel Parker Henderson (joel@joelparkerhenderson.com)
-#
-set -euf
-uri=${1:-"http://sfbay.craigslist.org/search/apa"}
-shift
-
-bedroom="1"
-
-while [ "$1" != "" ]; do
-  case $1 in
-    -b | --bedroom )
-      shift
-      bedroom=$1
-      ;;
-     *)
-      printf "Unknown option %s\n" "$1"
-      exit 1
-      ;;
-  esac
-done
-
-echo "min max range mean standarddeviation skewness kurtosis"
-curl "$uri" |
-html2text -nobs -width 10000 |
-sed '/Few LOCAL results found/,$d' |
-sed -n "s/^.* &#x0024;\([^ ]*\) \/ ${bedrooms}br - .*$/\1/p" |
-awk '$1 > 200 && $1 < 10000 {print $1}' |
-num min max range mean standarddeviation skewness kurtosis
