@@ -1,4 +1,4 @@
-# craigslist-apartment-stats:<br>Calculate statistics for Craigslist apartment listings.
+# craigslist-apartment-stats:<br>Calculate statistics for Craigslist apartment listings
 
 What this does:
 
