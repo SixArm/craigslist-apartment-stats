@@ -22,13 +22,13 @@ Options:
   * -h, --help, -?: show help
   * -V, --version: show version
 
-## Filter hints
+## Filter hints ##
 
 The Craigslist apartment listing web pages in some cities will let you
 filter by neighborhood, or price, or whether pets are allowed, and so
 on. These filters can be useful for scoping your search.
 
-## Bedroom hints
+## Bedroom hints ##
 
 If you use Craigslist and its web page to filter for number of
 bedrooms, then Craigslist typically shows any listings that have that
@@ -38,7 +38,7 @@ calculating meaningful statistics.
 This script provides the bedroom filter, so you can limit the bedrooms
 to exactly one number.
 
-## Price hints
+## Price hints ##
 
 Listing prices may vary by large ranges, depending if the price is per
 week, per month, or per year. For example, if you want statistics on
@@ -50,7 +50,7 @@ You can get improve your results by filtering for a minimum price and
 maximum price. To do this, use Craigslist's website search to create a
 link that includes minimum price and a maximum price.
 
-## Requirements
+## Requirements ##
 
 This script requires these commands:
 
