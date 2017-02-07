@@ -55,5 +55,6 @@ link that includes minimum price and a maximum price.
 This script requires these commands:
 
   * `curl` fetches the web page
-  * `html2text`renders the web page HTML
+  * `pup`renders the web page HTML
   * `num` calculates the stats; get it at http://www.numcommand.com
+

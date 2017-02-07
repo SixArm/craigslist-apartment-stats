@@ -4,9 +4,9 @@ set -euf
 ## Program Tracking ##
 
 program_command="craigslist-apartment-stats"
-program_version="3.0.0"
+program_version="4.0.0"
 program_created="2014-12-24"
-program_updated="2016-02-10"
+program_updated="2017-02-07"
 program_license="GPL"
 program_contact="Joel Parker Henderson (joel@joelparkerhenderson.com)"
 program_variant="$program_command version $program_version updated $program_updated"
@@ -73,7 +73,7 @@ link that includes minimum price and a maximum price.
 This script requires these commands:
 
   * \`curl\` fetches the web page
-  * \`html2text\`renders the web page HTML
+  * \`pup\` parses the HTML
   * \`num\` calculates the stats; get it at http://www.numcommand.com
 
 Command:$program_command
@@ -141,12 +141,11 @@ done
 
 ## Main ##
 
-echo "min max range mean stddev skewness kurtosis"
+echo "min max range mean median iqr stddev skewness kurtosis"
 
 for uri in "$@"; do
-  curl -s "$uri" |
-  html2text -nobs -width 10000 |
-  sed '/Few LOCAL results found/,$d' |
-  sed -n "s/^.*[^0-9]\([0-9]\+\) \/ ${bedrooms}br - .*$/\1/p" |
-  num min max range mean stddev skewness kurtosis
+    curl -s "$uri" |
+    pup ':parent-of(.housing.:contains("1br")) .result-price text{}' |
+    sed 's/[^[:digit:]]//g' |
+    num min max range mean median iqr stddev skewness kurtosis OFMT="%.0d"
 done
