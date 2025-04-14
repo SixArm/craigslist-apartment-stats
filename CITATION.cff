@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+title: craigslist-apartment-stats:<br>Calculate statistics for Craigslist apartment listings
+message: >-
+  If you use this work and you want to cite it,
+  then you can use the metadata from this file.
+type: software
+authors:
+  - given-names: Joel Parker
+    family-names: Henderson
+    email: joel@joelparkerhenderson.com
+    affiliation: joelparkerhenderson.com
+    orcid: 'https://orcid.org/0009-0000-4681-282X'
+identifiers:
+  - type: url
+    value: 'https://github.com/SixArm/craigslist-apartment-stats/'
+    description: craigslist-apartment-stats:<br>Calculate statistics for Craigslist apartment listings
+repository-code: 'https://github.com/SixArm/craigslist-apartment-stats/'
+abstract: >-
+  craigslist-apartment-stats:<br>Calculate statistics for Craigslist apartment listings
+license: See license file
